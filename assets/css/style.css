@@ -1,0 +1,51 @@
+@import url(http://fonts.googleapis.com/css?family=Share+Tech+Mono);
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  padding:0;
+  background-color:black;
+  font-family:'Share tech Mono', Arial, sans-serif;
+  color:white;
+}
+
+h1{
+  font-size:60px;
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+h3{
+  font-size:36px;
+  margin-top:0;
+}
+
+.container {
+  margin:0 auto;
+  width:1020px;
+  overflow:auto;
+  text-align:center;
+  padding:10px;
+}
+
+.p1 {
+  float:left;
+}
+
+.p2 {
+  float:right;
+}
+
+#gameCanvas {
+  width:1000px;
+  height:600px;
+  border:thin solid black;
+  background-color:white;
+}
+
+a {
+  display:block;
+}
