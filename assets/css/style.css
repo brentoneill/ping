@@ -26,17 +26,24 @@ h3{
 .container {
   margin:0 auto;
   width:1020px;
-  overflow:auto;
+  overflow:hidden;
   text-align:center;
   padding:10px;
 }
 
+h3.p1, h3.p2 {
+  transition:all .5s ease;
+  margin-bottom:30px;
+}
+
 .p1 {
   float:left;
+  margin-left:40px;
 }
 
 .p2 {
   float:right;
+  margin-right:40px;
 }
 
 #gameCanvas {

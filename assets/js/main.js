@@ -1,15 +1,19 @@
 var s = Snap("#gameCanvas");
 
+
+
 ///////////////////////////////////////
 //Game object
 ///////////////////////////////////////
 function game(ball, paddle1, paddle2){
-  this.timer = 1000;
-  this.timeRemaining = this.timer;
+  this.timer  = 5000;
   this.gameOn = true;
+  this.timeRemaining = this.timer;
 
+  //Display the time remaining
   $('p.time').text(this.timeRemaining);
 
+  //Used to restart the game
   this.restartGame = function(){
     alert('click ok to restart the game')
     this.timeRemaining = this.timer;
@@ -20,6 +24,7 @@ function game(ball, paddle1, paddle2){
     paddle2.initScore();
   }
 
+  //Counts down the time, runs gameOver() if time runs out
   this.subtractTime = function(){
     this.timeRemaining--;
     $('p.time').text(this.timeRemaining);
@@ -28,9 +33,8 @@ function game(ball, paddle1, paddle2){
     }
   }
 
+  //Alerts the player who wins then restarts the game
   this.gameOver = function(paddle1, paddle2){
-    console.log('game is over');
-    alert("game is over")
     if(paddle1.score > paddle2.score){
       alert("player 1 wins!");
     }
@@ -45,6 +49,10 @@ function game(ball, paddle1, paddle2){
 }
 ///////////////////////////////////////
 ///////////////////////////////////////
+///////////////////////////////////////
+///////////////////////////////////////
+
+
 
 
 
@@ -53,11 +61,11 @@ function game(ball, paddle1, paddle2){
 //BALL
 ///////////////////////////////////////
 function ball(spec){
-  this.radius = 10;
-  this.xDir = (Math.random() < 0.5 ? -1 : 1);
-  this.yDir = (Math.random() < 0.5 ? -1 : 1);
-  this.speed = 3;
-  this.inertia = .1;
+  this.radius   = 10;
+  this.xDir     = (Math.random() < 0.5 ? -1 : 1);
+  this.yDir     = (Math.random() < 0.5 ? -1 : 1);
+  this.speed    = 3;
+  this.inertia  = .1;
 
   this.positionX = 500;
   this.positionY = 300;
@@ -69,6 +77,7 @@ function ball(spec){
     cy: this.positionY
   });
 
+  //Drops the ball in the center of the court after score/game restart
   this.dropBall = function(){
     console.log('ball dropped');
     this.positionX = 500;
@@ -77,16 +86,19 @@ function ball(spec){
       cx: this.positionX,
       cy: this.positionY
     });
+    this.speed = 3;
     this.xDir = (Math.random() < 0.5 ? -1 : 1);
     this.yDir = (Math.random() < 0.5 ? -1 : 1);
   }
 
+  //Handles collision with the paddle
   this.paddleCollide = function(paddle1, paddle2) {
     //RIGHT SIDE
     if((this.positionX + this.radius) >= paddle2.positionX) {
       //Now check if it hit between paddle
       if((this.positionY >= paddle2.positionY) && (this.positionY <= paddle2.positionY + paddle2.height)){
         this.xDir = -(this.xDir);
+        this.speed += .4;
       }
     }
     //LEFT SIDE
@@ -94,34 +106,34 @@ function ball(spec){
       //Now check if it hit between paddle
       if((this.positionY >= paddle1.positionY) && (this.positionY <= paddle1.positionY + paddle1.height)){
         this.xDir = -(this.xDir);
+        this.speed += .4;
       }
     }
   }
 
 
   this.move = function(paddle1, paddle2){
-    ////////////////////////
-    //Keeps ball w/in canvas
-    /////////////////////////
+    //Handles Scoring
+    ////Player 2 scoring
     if(this.positionX <= 0 + this.radius){
       paddle2.addScore();
       this.dropBall();
     }
+    ////Player 1 scoring
     if(this.positionX + this.radius >= 1000){
       paddle1.addScore();
       this.dropBall();
     }
+
+    //Keeps ball w/in canvas
+    /////////////////////////
     if((this.positionY <= 0 + this.radius) || (this.positionY + this.radius >= 600)) {
       this.yDir = -this.yDir; //reverse direction
     }
-    ////////////////////////
-    ////////////////////////
 
-    /////////////////////////
     //Checks for paddle collision
     this.paddleCollide(paddle1, paddle2);
 
-    /////////////////////////
     //Sets ball positions
     /////////////////////////
     this.positionX += (this.xDir * this.speed);
@@ -131,10 +143,10 @@ function ball(spec){
       cx: this.positionX,
       cy: this.positionY
     });
-    /////////////////////////
-    /////////////////////////
   }
 }
+///////////////////////////////////////
+///////////////////////////////////////
 ///////////////////////////////////////
 ///////////////////////////////////////
 
@@ -154,13 +166,13 @@ function paddle(playerName){
   else {
     this.positionX = 30;
   }
-  this.positionY = 250;
-  this.height = 100;
-  this.width = 20;
-  this.color = "black";
-  this.speed = 10;
-  this.inertia = .8;
-  this.score = 0;
+  this.positionY  = 250;
+  this.height     = 100;
+  this.width      = 20;
+  this.color      = "black";
+  this.speed      = 10;
+  this.inertia    = .8;
+  this.score      = 0;
 
 
   var paddle = s.rect(this.positionX, this.positionY, this.width, this.height) ;
@@ -169,6 +181,7 @@ function paddle(playerName){
     class: this.pname
   });
 
+  //Initalize the score in the DOM. Called at page load and gameRestart
   this.initScore = function(){
     console.log('score init');
     var domClass = "";
@@ -179,9 +192,10 @@ function paddle(playerName){
       domClass = "h3.p2"
     }
     $(domClass).text(this.score);
+    $(domClass).css("transform", "scale(1)");
   }
 
-
+  //Adds the score to the correct player and updates the DOM
   this.addScore = function(){
     this.score++;
     if(this.pname == "Player 1") {
@@ -191,8 +205,11 @@ function paddle(playerName){
       domClass = "h3.p2"
     }
     $(domClass).text(this.score);
+    var scale = this.score/2 + 1;
+    $(domClass).css("transform", "scale("+scale+")");
   }
 
+  //Handles the movement of the paddle
   this.move = function(dir){
     var lastDirect = "";
 
@@ -237,13 +254,15 @@ function paddle(playerName){
 }
 ///////////////////////////////////////
 ///////////////////////////////////////
+///////////////////////////////////////
+///////////////////////////////////////
 
 
 
 
 ///////////////////////////////////////
 ///////////////////////////////////////
-//pong initialization
+//pIng Game initialization
 ///////////////////////////////////////
 ///////////////////////////////////////
 var pong = {
@@ -281,6 +300,7 @@ var pong = {
       }
     });
 
+    //RUn the game 'LOOP'
     setInterval(function(){
       pong.ball.move(pong.paddle1, pong.paddle2);
       pong.game.subtractTime(pong.paddle1, pong.paddle2);
@@ -288,6 +308,8 @@ var pong = {
 
   }
 }
+///////////////////////////////////////
+///////////////////////////////////////
 ///////////////////////////////////////
 ///////////////////////////////////////
 
