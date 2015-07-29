@@ -1,5 +1,5 @@
 
-
+// Initialize the Snap.svg library...
 var s = Snap('#gameCanvas');
 
 
@@ -7,8 +7,6 @@ var s = Snap('#gameCanvas');
 //Game object
 ///////////////////////////////////////
 function game(ball, paddle1, paddle2){
-
-  'use strict';
 
   this.timer  = 5000;
   this.gameOn = true;
@@ -65,8 +63,6 @@ function game(ball, paddle1, paddle2){
 //BALL
 ///////////////////////////////////////
 function ball(spec){
-
-  'use strict';
 
   this.radius   = 10;
   this.xDir     = (Math.random() < 0.5 ? -1 : 1);
@@ -165,8 +161,6 @@ function ball(spec){
 //PADDLE
 ///////////////////////////////////////
 function paddle(playerName){
-
-  'use strict';
 
   this.pname = playerName;
   if( playerName === 'Player 2' ) {
@@ -272,8 +266,6 @@ function paddle(playerName){
 ///////////////////////////////////////
 ///////////////////////////////////////
 var ping = {
-
-  'use strict'
 
   init: function() {
     ping.initStyling();
