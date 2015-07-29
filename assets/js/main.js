@@ -1,4 +1,4 @@
-var s = Snap("#gameCanvas");
+var s = Snap('#gameCanvas');
 
 
 
@@ -36,7 +36,7 @@ function game(ball, paddle1, paddle2){
   //Alerts the player who wins then restarts the game
   this.gameOver = function(paddle1, paddle2){
     if(paddle1.score > paddle2.score){
-      alert("player 1 wins!");
+      alert('player 1 wins!');
     }
     else if(paddle2.score > paddle1.score){
       alert('player 2 wins!');
@@ -64,7 +64,7 @@ function ball(spec){
   this.radius   = 10;
   this.xDir     = (Math.random() < 0.5 ? -1 : 1);
   this.yDir     = (Math.random() < 0.5 ? -1 : 1);
-  this.speed    = 3;
+  this.speed    = Math.floor((Math.random()*5+2));
   this.inertia  = .1;
 
   this.positionX = 500;
@@ -72,21 +72,20 @@ function ball(spec){
 
   var ball = s.circle(40, 40, this.radius);
   ball.attr({
-    fill: "#A1F235",
+    fill: '#000000',
     cx: this.positionX,
     cy: this.positionY
   });
 
   //Drops the ball in the center of the court after score/game restart
   this.dropBall = function(){
-    console.log('ball dropped');
     this.positionX = 500;
     this.positionY = 300;
     ball.attr({
       cx: this.positionX,
       cy: this.positionY
     });
-    this.speed = 3;
+    this.speed = Math.floor((Math.random()*4+3));
     this.xDir = (Math.random() < 0.5 ? -1 : 1);
     this.yDir = (Math.random() < 0.5 ? -1 : 1);
   }
@@ -160,16 +159,16 @@ function ball(spec){
 ///////////////////////////////////////
 function paddle(playerName){
   this.pname = playerName;
-  if(playerName ==="Player 2") {
+  if( playerName === 'Player 2' ) {
     this.positionX = 950;
-  }
-  else {
+  } else {
     this.positionX = 30;
   }
-  this.positionY  = 250;
+
+  this.positionY  = Math.floor(Math.random()*400+100);
   this.height     = 100;
   this.width      = 20;
-  this.color      = "black";
+  this.color      = 'black';
   this.speed      = 10;
   this.inertia    = .8;
   this.score      = 0;
@@ -183,39 +182,38 @@ function paddle(playerName){
 
   //Initalize the score in the DOM. Called at page load and gameRestart
   this.initScore = function(){
-    console.log('score init');
-    var domClass = "";
-    if(this.pname == "Player 1") {
-      domClass = "h3.p1";
+    var domClass = '';
+    if(this.pname == 'Player 1') {
+      domClass = 'h3.p1';
     }
-    else if(this.pname == "Player 2"){
-      domClass = "h3.p2"
+    else if(this.pname == 'Player 2'){
+      domClass = 'h3.p2'
     }
     $(domClass).text(this.score);
-    $(domClass).css("transform", "scale(1)");
+    $(domClass).css('transform', 'scale(1)');
   }
 
   //Adds the score to the correct player and updates the DOM
   this.addScore = function(){
     this.score++;
-    if(this.pname == "Player 1") {
-      domClass = "h3.p1";
+    if(this.pname == 'Player 1') {
+      domClass = 'h3.p1';
     }
-    else if(this.pname == "Player 2"){
-      domClass = "h3.p2"
+    else if(this.pname == 'Player 2'){
+      domClass = 'h3.p2'
     }
     $(domClass).text(this.score);
-    var scale = this.score/2 + 1;
-    $(domClass).css("transform", "scale("+scale+")");
+    var scale = this.score/3 + 1;
+    $(domClass).css('transform', 'scale('+scale+')');
   }
 
   //Handles the movement of the paddle
   this.move = function(dir){
-    var lastDirect = "";
+    var lastDirect = '';
 
     //UP movement
-    if(dir==="up"){
-      // if(lastDirect == "down"){
+    if(dir==='up'){
+      // if(lastDirect == 'down'){
       //   this.inertia = .5;
       // }
       if(this.positionY <= 0) {
@@ -229,12 +227,12 @@ function paddle(playerName){
       paddle.attr({
         y: this.positionY
       });
-      lastDirect = "up";
+      lastDirect = 'up';
     }
 
     //DOWN movement
-    else if(dir=="down"){
-      // if(lastDirect == "up"){
+    else if(dir=='down'){
+      // if(lastDirect == 'up'){
       //   this.inertia = .5;
       // }
       if(this.positionY + this.height >= 600) {
@@ -248,7 +246,7 @@ function paddle(playerName){
       paddle.attr({
         y: this.positionY
       });
-      lastDirect = "down";
+      lastDirect = 'down';
     }
   }
 }
@@ -265,45 +263,72 @@ function paddle(playerName){
 //pIng Game initialization
 ///////////////////////////////////////
 ///////////////////////////////////////
-var pong = {
+var ping = {
   init:function(){
-    pong.initStyling();
-    pong.initEvents();
+    ping.initStyling();
+    ping.initEvents();
   },
   initStyling:function(){
     //Draws out paddle and ball
-    pong.paddle1 = new paddle("Player 1");
-    pong.paddle2 = new paddle("Player 2");
-    pong.ball = new ball();
-    pong.game = new game(pong.ball, pong.paddle1, pong.paddle2);
-    pong.paddle1.initScore();
-    pong.paddle2.initScore();
+    ping.paddle1 = new paddle('Player 1');
+    ping.paddle2 = new paddle('Player 2');
+    ping.ball = new ball();
+    ping.game = new game(ping.ball, ping.paddle1, ping.paddle2);
+    ping.paddle1.initScore();
+    ping.paddle2.initScore();
   },
   initEvents:function(){
-    //Handles events for moving paddle
-    $(document).keydown(function(e){
-      if(e.keyCode==40){
-        e.preventDefault();
-        pong.paddle2.move("down", pong.paddle2.name);
-      }
-      else if(e.keyCode==38){
-        e.preventDefault();
-        pong.paddle2.move("up", pong.paddle2.name);
-      }
-      else if(e.keyCode==83){
-        e.preventDefault();
-        pong.paddle1.move("down", pong.paddle1.name)
-      }
-      else if(e.keyCode==87){
-        e.preventDefault();
-        pong.paddle1.move("up", pong.paddle1.name)
-      }
-    });
 
-    //RUn the game 'LOOP'
+    var map = []; // Or you could call it 'key'
+    onkeydown = onkeyup = function(e){          // A little vanilla.js to handle keydown/keyup events
+        e = e || event; // to deal with IE
+        map[e.keyCode] = e.type == 'keydown';
+        if ( map[87] && map[38]) {
+          ping.paddle1.move('up')
+          ping.paddle2.move('up');
+        } else if ( map[83] && map [40] ) {
+          ping.paddle1.move('down');
+          ping.paddle2.move('down');
+        } else if ( map[83] && map [38] ) {
+          ping.paddle1.move('down');
+          ping.paddle2.move('up');
+        } else if ( map[87] && map [40] ) {
+          ping.paddle1.move('up');
+          ping.paddle2.move('down');
+        } else if ( map[87] ) {
+          ping.paddle1.move('up');
+        } else if ( map[38] ) {
+          ping.paddle2.move('up');
+        } else if ( map[83] ) {
+          ping.paddle1.move('down');
+        } else if ( map[40] ) {
+          ping.paddle2.move('down');
+        }
+    }
+
+
+    // //Handles events for moving paddle
+    // $(document).keydown(function(e){
+    //   var map = []; // Or you could call it 'key'
+    //   if(e.keyCode === 40){
+    //     e.preventDefault();
+    //     ping.paddle2.move('down');
+    //   } else if(e.keyCode === 38){
+    //     e.preventDefault();
+    //     ping.paddle2.move('up');
+    //   } else if(e.keyCode === 83){
+    //     e.preventDefault();
+    //     ping.paddle1.move('down')
+    //   } else if(e.keyCode === 87){
+    //     e.preventDefault();
+    //     ping.paddle1.move('up')
+    //   }
+    // });
+
+    //Run the game 'LOOP'
     setInterval(function(){
-      pong.ball.move(pong.paddle1, pong.paddle2);
-      pong.game.subtractTime(pong.paddle1, pong.paddle2);
+      ping.ball.move(ping.paddle1, ping.paddle2);
+      ping.game.subtractTime(ping.paddle1, ping.paddle2);
       }, 16);
 
   }
@@ -316,5 +341,5 @@ var pong = {
 
 
 $(document).ready(function (){
-  pong.init();
+  ping.init();
 });
