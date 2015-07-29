@@ -273,7 +273,7 @@ function paddle(playerName){
 ///////////////////////////////////////
 var ping = {
 
-  'use strict';
+  'use strict'
 
   init: function() {
     ping.initStyling();
