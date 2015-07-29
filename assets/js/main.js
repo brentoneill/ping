@@ -1,11 +1,15 @@
-var s = Snap('#gameCanvas');
 
+
+var s = Snap('#gameCanvas');
 
 
 ///////////////////////////////////////
 //Game object
 ///////////////////////////////////////
 function game(ball, paddle1, paddle2){
+
+  'use strict';
+
   this.timer  = 5000;
   this.gameOn = true;
   this.timeRemaining = this.timer;
@@ -61,6 +65,9 @@ function game(ball, paddle1, paddle2){
 //BALL
 ///////////////////////////////////////
 function ball(spec){
+
+  'use strict';
+
   this.radius   = 10;
   this.xDir     = (Math.random() < 0.5 ? -1 : 1);
   this.yDir     = (Math.random() < 0.5 ? -1 : 1);
@@ -158,6 +165,9 @@ function ball(spec){
 //PADDLE
 ///////////////////////////////////////
 function paddle(playerName){
+
+  'use strict';
+
   this.pname = playerName;
   if( playerName === 'Player 2' ) {
     this.positionX = 950;
@@ -216,11 +226,10 @@ function paddle(playerName){
       // if(lastDirect == 'down'){
       //   this.inertia = .5;
       // }
-      if(this.positionY <= 0) {
+      if (this.positionY <= 0) {
         this.positionY = 0;
         this.inertia = .5;
-      }
-      else{
+      } else {
         this.positionY -= (10*this.inertia);
         this.inertia += .1;
       }
@@ -231,15 +240,14 @@ function paddle(playerName){
     }
 
     //DOWN movement
-    else if(dir=='down'){
+    else if (dir=='down'){
       // if(lastDirect == 'up'){
       //   this.inertia = .5;
       // }
-      if(this.positionY + this.height >= 600) {
+      if (this.positionY + this.height >= 600) {
         this.positionY = 600 - this.height;
         this.inertia = .5;
-      }
-      else{
+      } else {
         this.positionY += (10*this.inertia);
         this.inertia += .1;
       }
@@ -264,11 +272,15 @@ function paddle(playerName){
 ///////////////////////////////////////
 ///////////////////////////////////////
 var ping = {
-  init:function(){
+
+  'use strict';
+
+  init: function() {
     ping.initStyling();
     ping.initEvents();
   },
-  initStyling:function(){
+
+  initStyling: function() {
     //Draws out paddle and ball
     ping.paddle1 = new paddle('Player 1');
     ping.paddle2 = new paddle('Player 2');
@@ -277,8 +289,12 @@ var ping = {
     ping.paddle1.initScore();
     ping.paddle2.initScore();
   },
-  initEvents:function(){
 
+  initEvents :function() {
+
+    // Handles player movement of paddles using
+    //// Player2 - Arrow Up / Arrow Down
+    //// Player1 - W / S
     var map = []; // Or you could call it 'key'
     onkeydown = onkeyup = function(e){          // A little vanilla.js to handle keydown/keyup events
         e = e || event; // to deal with IE
@@ -305,25 +321,6 @@ var ping = {
           ping.paddle2.move('down');
         }
     }
-
-
-    // //Handles events for moving paddle
-    // $(document).keydown(function(e){
-    //   var map = []; // Or you could call it 'key'
-    //   if(e.keyCode === 40){
-    //     e.preventDefault();
-    //     ping.paddle2.move('down');
-    //   } else if(e.keyCode === 38){
-    //     e.preventDefault();
-    //     ping.paddle2.move('up');
-    //   } else if(e.keyCode === 83){
-    //     e.preventDefault();
-    //     ping.paddle1.move('down')
-    //   } else if(e.keyCode === 87){
-    //     e.preventDefault();
-    //     ping.paddle1.move('up')
-    //   }
-    // });
 
     //Run the game 'LOOP'
     setInterval(function(){
